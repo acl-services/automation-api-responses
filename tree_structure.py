@@ -44,7 +44,7 @@ project_type= Node("project_types",parent=high_bond_root,url="/project_types")
 custom_attributes= Node("custom_attributes", parent=project_type, url='/custom_attributes')
 
 #workflows is the child resource of HB
-workflows= Node("workflows",parent=high_bond_root,url="workflows")
+workflows= Node("workflows",parent=high_bond_root,url="/workflows")
 
 #workflow_status is the child resource of workflow
 workflow_status= Node("workflow_status", parent=workflows,url="?include=statuses")

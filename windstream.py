@@ -110,14 +110,14 @@ def extract_resources_from_api_tree(hb_root,url_returned,token):
                         df_child_result = pd.concat([df_child_result, temp_df])
 
                         #printing the child url to understand the children which makes the successful response code
-                        #print("Printing the child url for the debugging purpose",child_resource_endpoint)
+                        print("Printing the child url for the debugging purpose",child_resource_endpoint)
                     else:
                         #if the response code is not 200, it means the endpoints are failing
                         #print("Failed API endpoint")
 
                         #capture the node names which has end point failure
                         
-                        #print("The child resource which not able to make the api call is",child_resource_endpoint)
+                        print("The child resource which not able to make the api call is",child_resource_endpoint)
                         print(node.name,"API response code",child_resp.status_code)
 
                 #print(df_child_result)
