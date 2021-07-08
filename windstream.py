@@ -1,4 +1,6 @@
 
+# import all the necessary packages
+
 from pandas import json_normalize
 from anytree import Node, RenderTree
 import pandas as pd
@@ -16,6 +18,10 @@ url=''
 # Function to form  the Org level-base URL
 def parent_resource_access_credentials():
     
+    """
+    Function to get the user access credentials as input to make the api endpoints
+    :return: base url along with token for other functions
+    """
     #Hardcoded basepath
     basepath='https://apis-us.highbond.com/v1/'
     
@@ -76,6 +82,8 @@ def extract_resources_from_api_tree(hb_root,url_returned,token):
                 
                 #Normalize the reponse data as dataframe row
                 df_result = pd.json_normalize(response_dict['data'])
+
+
                 node.api_response = df_result
                 
                 # start appending the dataframes 
@@ -115,18 +123,22 @@ def extract_resources_from_api_tree(hb_root,url_returned,token):
 
                         #printing the child url to understand the children which makes the successful response code
                         print("Printing the child url for the debugging purpose",child_resource_endpoint)
+
                     else:
+
                         #capture the node names which has end point failure
-                        
                         print("The child resource which not able to make the api call is",child_resource_endpoint)
                         
+                        #print the node names with API response code
                         print(node.name,"API response code",child_resp.status_code)
 
-                #print(df_child_result)
-                #appending the child_Result dataframe
-                print(node.name,node.depth)
-                list_of_df.append(df_child_result)
                 
+                #print the node name as well as node depth for debugging purpose
+                print(node.name,node.depth)
+                #append the dataframe with child node url
+                list_of_df.append(df_child_result)
+    
+    #return list_of _df            
     return list_of_df
 
 # Function to build the child url to extract the resources from api response
@@ -136,8 +148,11 @@ def build_child_url(base_url,parent_name,child_name,df_parent):
     resources and make the api call and converts the 
     response into dataframe rows only
     if the response code is 200(success)
-    :param high_bond_tree: root node
-    :return: excel sheet
+    :param base_url: url
+    :param parent_name: parent node name
+    :param child_name: child node name
+    :param df_parent: dataframe
+    :return:  child-url
     """
     #intialize a list to store the child_urls
     child_url_list=[]
@@ -157,29 +172,6 @@ base_url,token =parent_resource_access_credentials()
 # function call for extract_resources_from_url
 list_of_df =extract_resources_from_api_tree(tree_structure.high_bond_root,base_url,token)
 
-# # Function to export the dataframe results into an excel sheet 
-# def export_to_excel(list_of_df):
-    
-#     root_path = 'API_extraction'
-#     excel_path = root_path+'/excel_resources'
-#     os.makedirs(root_path, exist_ok=True)
-#     os.makedirs(excel_path, exist_ok=True)
-#     excel_filename = 'Extracted_resources_from_api_31966.xlsx'
-#     excel_file = os.path.join(excel_path, excel_filename)
-#     writer = pd.ExcelWriter(excel_file, engine='xlsxwriter')
-#     df_list_counter=0
-    
-#     # loop through all the resources in the list
-#     for resource in list_of_df:
-#       #print stamtement for debugging purpose
-#       print("the resource inside the export to excel function is",resource)
-
-#       #if the response id 200 and there is responses then write into excel
-#       if(resource.shape[0]>0):
-#             resource.to_excel(writer, sheet_name = resource['type'].iloc[0], index=False)
-#             df_list_counter+=1
-  
-#     writer.save()
 
 # Function to export the dataframe results into an excel sheet 
 def export_to_excel_from_tree(high_bond_tree):

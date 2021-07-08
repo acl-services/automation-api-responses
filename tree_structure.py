@@ -2,10 +2,10 @@
 from anytree import Node, RenderTree, AsciiStyle, PreOrderIter, LevelOrderIter
 from pandas import pandas as pd
 
-#DEclare the HB as root resource
+#Declare the HB as root resource
 high_bond_root = Node("high_bond",url="high_bond",api_response=pd.DataFrame)
 
-#DEclare the collections as the child of HBR
+#Declare the collections as the child of HBR
 collections = Node("collections", parent=high_bond_root,url="/collections",api_response=pd.DataFrame)
 questionnaires = Node("questionnaires", parent=collections,url="/questionnaires",api_response=pd.DataFrame)
 analyses = Node("analyses", parent=collections,url="/analyses",api_response=pd.DataFrame)
