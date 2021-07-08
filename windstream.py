@@ -9,12 +9,11 @@ import tree_structure
 from anytree import Node, RenderTree, AsciiStyle, PreOrderIter, LevelOrderIter
 
 org_id=0
-#token=''
-url=''
-#list_of_org_level_resources=['collections','project_types']
-#list_of_child_level_resources=['analysis','events']
 
-# Function to form  the Org level URL
+url=''
+
+
+# Function to form  the Org level-base URL
 def parent_resource_access_credentials():
     
     #Hardcoded basepath
@@ -44,6 +43,8 @@ def extract_resources_from_api_tree(hb_root,url_returned,token):
     :return: list of df
     """
     list_of_df=[]
+    
+    #intialize the dataframe
     df_result = pd.DataFrame()
     
     #Traverse the Tree in preorder traversal
@@ -55,7 +56,8 @@ def extract_resources_from_api_tree(hb_root,url_returned,token):
         
         #if the node's parent os highbond 
         elif node.parent.name=='high_bond':
-
+            
+            #intialize the dataframe
             df_result = pd.DataFrame()
             
             # form the api-endpoint with the current child name
@@ -63,7 +65,7 @@ def extract_resources_from_api_tree(hb_root,url_returned,token):
             
             # make the api call with bearer token
             resp = requests.get(api_endpoint, headers = {'Authorization':'Bearer ' + token, 'Accept-Encoding' : "" })
-            print("pRINTING THE PARENT API ENDPOINT FOR THE DEBUGGING PURPOSE",api_endpoint)
+            print("API response for org-level endpoints",api_endpoint)
             
 
             # if the status code is successful then normalize the responses
@@ -81,7 +83,6 @@ def extract_resources_from_api_tree(hb_root,url_returned,token):
                 
             else:
                # print("Failed API endpoint")
-
                 print(node.name,"API response code",resp.status_code)
 
     #if node is child - call endpoint of child - url- base_url/parent/parent id/child
@@ -115,12 +116,10 @@ def extract_resources_from_api_tree(hb_root,url_returned,token):
                         #printing the child url to understand the children which makes the successful response code
                         print("Printing the child url for the debugging purpose",child_resource_endpoint)
                     else:
-                        #if the response code is not 200, it means the endpoints are failing
-                        #print("Failed API endpoint")
-
                         #capture the node names which has end point failure
                         
                         print("The child resource which not able to make the api call is",child_resource_endpoint)
+                        
                         print(node.name,"API response code",child_resp.status_code)
 
                 #print(df_child_result)
@@ -132,19 +131,24 @@ def extract_resources_from_api_tree(hb_root,url_returned,token):
 
 # Function to build the child url to extract the resources from api response
 def build_child_url(base_url,parent_name,child_name,df_parent):
-    
+    """
+    Function traverse the node structure and pick each of the 
+    resources and make the api call and converts the 
+    response into dataframe rows only
+    if the response code is 200(success)
+    :param high_bond_tree: root node
+    :return: excel sheet
+    """
+    #intialize a list to store the child_urls
     child_url_list=[]
-    
+
+    #Iterate through every row in org-level resources to call the nested level resources under them
     for index, row in df_parent.iterrows():
        
        #loop through the df_parent dataframe for every row form the child URL
        child_url_list.append(base_url + "/"+ parent_name + "/" + row['id']+ child_name)
-       
-       #print the child url
-       #print(child_url_list)
-
-       
     
+    #returns the child url list   
     return child_url_list 
     
 # function call for api access credentials
@@ -153,41 +157,65 @@ base_url,token =parent_resource_access_credentials()
 # function call for extract_resources_from_url
 list_of_df =extract_resources_from_api_tree(tree_structure.high_bond_root,base_url,token)
 
-# Function to export the dataframe results into an excel sheet 
-def export_to_excel(list_of_df):
+# # Function to export the dataframe results into an excel sheet 
+# def export_to_excel(list_of_df):
     
-    root_path = 'API_extraction'
-    excel_path = root_path+'/excel_resources'
-    os.makedirs(root_path, exist_ok=True)
-    os.makedirs(excel_path, exist_ok=True)
-    excel_filename = 'Extracted_resources_from_api_31966.xlsx'
-    excel_file = os.path.join(excel_path, excel_filename)
-    writer = pd.ExcelWriter(excel_file, engine='xlsxwriter')
-    df_list_counter=0
- 
-    for resource in list_of_df:
-      
-      print("the resource inside the export to excel function is",resource)
-      if(resource.shape[0]>0):
-            resource.to_excel(writer, sheet_name = resource['type'].iloc[0], index=False)
-            df_list_counter+=1
+#     root_path = 'API_extraction'
+#     excel_path = root_path+'/excel_resources'
+#     os.makedirs(root_path, exist_ok=True)
+#     os.makedirs(excel_path, exist_ok=True)
+#     excel_filename = 'Extracted_resources_from_api_31966.xlsx'
+#     excel_file = os.path.join(excel_path, excel_filename)
+#     writer = pd.ExcelWriter(excel_file, engine='xlsxwriter')
+#     df_list_counter=0
+    
+#     # loop through all the resources in the list
+#     for resource in list_of_df:
+#       #print stamtement for debugging purpose
+#       print("the resource inside the export to excel function is",resource)
+
+#       #if the response id 200 and there is responses then write into excel
+#       if(resource.shape[0]>0):
+#             resource.to_excel(writer, sheet_name = resource['type'].iloc[0], index=False)
+#             df_list_counter+=1
   
-    writer.save()
+#     writer.save()
 
 # Function to export the dataframe results into an excel sheet 
 def export_to_excel_from_tree(high_bond_tree):
-    
+    """
+    Function traverse the node structure and pick each of the resources and make the api call and converts the response into dataframe rows only
+    if the response code is 200(success)
+    :param high_bond_tree: root node
+    :return: excel sheet
+    """
+
+    # create the output file path
     root_path = 'API_extraction'
+
+    # create the sub folder to write the excel
     excel_path = root_path+'/excel_resources'
+
     os.makedirs(root_path, exist_ok=True)
     os.makedirs(excel_path, exist_ok=True)
+
+    #create the excel sheet
     excel_filename = 'Extracted_resources_from_api_31966.xlsx'
+    
+    #Use excel path
     excel_file = os.path.join(excel_path, excel_filename)
+    
+    #use excelwriter to write into excel
     writer = pd.ExcelWriter(excel_file, engine='xlsxwriter')
+    
+    #maintain a counter
     df_list_counter=0
  
     for node in PreOrderIter(high_bond_tree):
+
+        #check the depth of the node if it is greater than 0 to confirm  it has nested structure
         if(node.depth > 0):
+
           if(node.api_response.shape[0]>0):
             node.api_response.to_excel(writer, sheet_name = node.name, index=False)
             df_list_counter+=1

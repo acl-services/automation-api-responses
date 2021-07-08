@@ -17,7 +17,7 @@ Windstream special project
 
 This project has the following requirements:
 
-Build a python script to read the resources list and create the excel tabs based on the API responses for each of the resources in the list
+Build a python script to read the resources list and create the excel tabs based on the API responses for each of the resources in the list. The excel file would be a tool to understnad the relationship between the resources.
 
 ### The list of resources were given as part of the intial level discussion with John and Jared:
 'collections'
@@ -60,7 +60,7 @@ API responses from org level resources and also from its nested resources
 ### Output:
 Excel sheet which contain all the resources as tab names and its responses as fields names
 
-The python script has been developed completely based on Highbond API documentation.The relationship between the resources are been cross checked with API documentation and created the treestructure based on the API documentation.
+The python script has been developed completely based on Highbond API documentation.The relationship between the resources have been cross checked with API documentation and created the treestructure based on the API documentation.
 
 https://docs-apis.highbond-s1.com/public.html
 
