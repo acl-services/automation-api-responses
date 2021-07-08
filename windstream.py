@@ -63,7 +63,9 @@ def extract_resources_from_api_tree(hb_root,url_returned,token):
             
             # make the api call with bearer token
             resp = requests.get(api_endpoint, headers = {'Authorization':'Bearer ' + token, 'Accept-Encoding' : "" })
+            print("pRINTING THE PARENT API ENDPOINT FOR THE DEBUGGING PURPOSE",api_endpoint)
             
+
             # if the status code is successful then normalize the responses
             if resp.status_code == 200:
                 
@@ -72,11 +74,11 @@ def extract_resources_from_api_tree(hb_root,url_returned,token):
                 
                 #Normalize the reponse data as dataframe row
                 df_result = pd.json_normalize(response_dict['data'])
+                node.api_response = df_result
                 
                 # start appending the dataframes 
                 list_of_df.append(df_result)
                 
-                #print("pRINTING THE PARENT API ENDPOINT FOR THE DEBUGGING PURPOSE",api_endpoint)
             else:
                # print("Failed API endpoint")
 
@@ -86,7 +88,7 @@ def extract_resources_from_api_tree(hb_root,url_returned,token):
         elif node.parent!='high_bond':
                 
                 #form the child url endpoint by calling the build child url function
-                child_resource_endpoint_list=build_child_url(base_url,node.parent.name,node.url,df_result)
+                child_resource_endpoint_list=build_child_url(base_url,node.parent.name,node.url,node.parent.api_response)
                 
                 #intialize the df_child_result as a pandas dataframe to append
                 df_child_result = pd.DataFrame()
@@ -108,6 +110,7 @@ def extract_resources_from_api_tree(hb_root,url_returned,token):
                         
                         #concatinating the child data frames with child result dataframe
                         df_child_result = pd.concat([df_child_result, temp_df])
+                        node.api_response = df_child_result
 
                         #printing the child url to understand the children which makes the successful response code
                         print("Printing the child url for the debugging purpose",child_resource_endpoint)
@@ -122,6 +125,7 @@ def extract_resources_from_api_tree(hb_root,url_returned,token):
 
                 #print(df_child_result)
                 #appending the child_Result dataframe
+                print(node.name,node.depth)
                 list_of_df.append(df_child_result)
                 
     return list_of_df
@@ -170,7 +174,28 @@ def export_to_excel(list_of_df):
   
     writer.save()
 
-export_to_excel(list_of_df) 
+# Function to export the dataframe results into an excel sheet 
+def export_to_excel_from_tree(high_bond_tree):
+    
+    root_path = 'API_extraction'
+    excel_path = root_path+'/excel_resources'
+    os.makedirs(root_path, exist_ok=True)
+    os.makedirs(excel_path, exist_ok=True)
+    excel_filename = 'Extracted_resources_from_api_31966.xlsx'
+    excel_file = os.path.join(excel_path, excel_filename)
+    writer = pd.ExcelWriter(excel_file, engine='xlsxwriter')
+    df_list_counter=0
+ 
+    for node in PreOrderIter(high_bond_tree):
+        if(node.depth > 0):
+          if(node.api_response.shape[0]>0):
+            node.api_response.to_excel(writer, sheet_name = node.name, index=False)
+            df_list_counter+=1
+  
+    writer.save()
+
+#export_to_excel(list_of_df) 
+export_to_excel_from_tree(tree_structure.high_bond_root)
 
 
 
