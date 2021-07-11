@@ -1,5 +1,7 @@
 
-## Author: R.Nandhini Date of Creation: July 7,2021
+## Author: R.Nandhini 
+
+## Date of Creation: July 7,2021
 
 ## Product Owner and Intial contributors : John Fitch, Jared
 
@@ -74,6 +76,11 @@ Excel sheet which contain all the resources as tab names and its responses as fi
 The python script has been developed completely based on Highbond API documentation.The relationship between the resources have been cross checked with API documentation and created the treestructure based on the API documentation.
 
 https://docs-apis.highbond-s1.com/public.html
+
+### How to run
+
+step 1: Install requirements.txt by python -m pip install -r requirements.txt
+step 2: Run Windstream.py
 
 ### Software design behind this approach:
 

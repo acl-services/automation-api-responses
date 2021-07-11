@@ -57,7 +57,7 @@ workflow_status_events= Node("workflow_status_events", parent=workflows,url="?in
 # printing the tree structre at the console
 [print(node.name,node.parent,node.url) for node in PreOrderIter(high_bond_root)]
 
-#print(RenderTree(high_bond_root))
+print(RenderTree(high_bond_root))
 
 
 
