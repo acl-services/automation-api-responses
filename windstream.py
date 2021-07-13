@@ -3,6 +3,7 @@
 #system defined module
 from pandas import json_normalize
 from anytree import Node, RenderTree
+
 import pandas as pd
 import requests
 import os
@@ -11,7 +12,8 @@ import json
 import tree_structure
 from anytree import Node, RenderTree, AsciiStyle, PreOrderIter, LevelOrderIter
 
-
+token=input("Enter your access token \n")
+        
 
 def access_credentials():
     #input_url_list=pd.DataFrame()
@@ -27,8 +29,6 @@ def access_credentials():
         region_code=row['region_code']
 
         url_with_region_code='https://apis-'+ region_code+'.highbond.com/v1/'
-
-       
 
         #forming the base base_url for api call
         base_url=url_with_region_code+'orgs/'+str(org_id)
@@ -56,49 +56,6 @@ def access_credentials():
     print(input_file)
 
     return input_file
-
-
-
-# Function to form  the Org level-base URL
-# def parent_resource_access_credentials():
-    
-#     """
-#     Function to get the user access credentials as input to make the api endpoints
-#     :return: base base_url along with token for other functions
-#     """
-
-#     #For this parti. org id the following is the list of resources/check whether the list is complete
-
-#     #excel file gets the different columns such as region-code, org_id
-#     # read this input file 
-#     # loop through this
-#     # replace those info in base base_url
-#     # how do I cross verfify ??
-
-#     region_code=input("\n\nEnter the region_code : Enter any of this codes : US,AF,SA,AP,AU,CA,AU,US,AF \n\n ")
-    
-#     #Base base_url 
-#     basepath='https://apis-'+region_code+'.highbond.com/v1/'
-    
-#     #Display baseurl to make sure it is correct
-#     print("The base base_url is :", basepath)
-    
-#     # Get the org-id as user input 
-#     org_id=input("Enter the org-id \n")
-    
-#     # Get the access token as user input
-#     token=input("Enter your access token \n")
-
-#     # forming the base base_url for api call
-#     base_url=basepath+'orgs/'+str(org_id)
-    
-#     #cross check the base base_url for the purpose of validation
-#     print("The base base_url is ",base_url)
-
-#     # display the org-id,region code,token to make sure the credentials
-#     print("Org_Id","Region_Code","Token",org_id,region_code,token)
-    
-#     return base_url, token, org_id, region_code
 
 # function call for api access credentials
 
@@ -290,7 +247,7 @@ def export_to_excel_from_tree(high_bond_tree,org_id,region_code):
   
     writer.save()
 
-print("before the loop",input_url_list)
+
 
 for index, row in input_url_list.iterrows():
 
@@ -298,9 +255,7 @@ for index, row in input_url_list.iterrows():
     print(high_bond_root)
     print(row)
     # function call for extract_resources_from_url
-    list_of_df =extract_resources_from_api_tree(high_bond_root,row.base_url,row.token)
-    
-
+    list_of_df =extract_resources_from_api_tree(high_bond_root,row.base_url,token)
     #export_to_excel(list_of_df) 
     export_to_excel_from_tree(high_bond_root,row.org_id,row.region_code)
 
