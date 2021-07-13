@@ -5,6 +5,7 @@ from pandas import json_normalize
 from anytree import Node, RenderTree
 
 import pandas as pd
+import logging
 import requests
 import os
 import json
@@ -12,9 +13,18 @@ import json
 import tree_structure
 from anytree import Node, RenderTree, AsciiStyle, PreOrderIter, LevelOrderIter
 
-token=input("Enter your access token \n")
-        
+logging.basicConfig(filename="windstream.log",level=logging.INFO)
 
+
+token=input("Enter your access token \n")
+print(token)
+# error handling for empty token
+if token=='':
+    print("Token not provided, exiting the program")
+    logging.critical('Token not provided, exiting the program')
+    exit()
+logging.info("token is ",token)
+# function to get the access credentials from an inpdut file and form an api endpoint
 def access_credentials():
     #input_url_list=pd.DataFrame()
 	
@@ -35,20 +45,7 @@ def access_credentials():
 
         
         input_file.loc[index,'base_url']=base_url
-        # print("the base_url:",base_url)
-
-        # row['base_url']=base_url
-        # print(row['base_url'])
-        #cross check the base base_url for the purpose of validation
-        #print("The base base_url is ",base_url)
-
-        # Get the access token as user input
-        token=input("Enter your access token \n")
-        input_file.loc[index,'token']=token
-
-
-        # row['token']=token
-        # print(row['token'])
+        
 
         # display the org-id,region code,token to make sure the credentials
         print("Org_Id","Region_Code","Token",org_id,region_code,token)
