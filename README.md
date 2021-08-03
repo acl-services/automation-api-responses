@@ -90,6 +90,8 @@ In order to understand the API responses, we need to understand the hierarchical
 
 https://whimsical.com/windstream-HoQh2tES1xAnFa8iUqzoS2
 
+https://whimsical.com/resource-level-hierarchy-WRLG6fDMYJ3atJonHvjh5T
+
 ### Anytree DOcumentation
 
 https://anytree.readthedocs.io/en/latest/index.html
