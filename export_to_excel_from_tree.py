@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 from pandas.core.frame import DataFrame
+=======
+>>>>>>> e2a36b2ceac6c7d03b71985e40a635bf0e9c87d5
 import windstream_logger
 logging= windstream_logger.get_logger("write_into_excel")
 
 import os
+<<<<<<< HEAD
 import itertools
 import pandas as pd
 import json
@@ -126,6 +130,13 @@ def  custom_dataframe_nested1(api_json_list,col_name):
     return nested_structures
 
 
+=======
+import pandas as pd
+import requests
+from anytree import Node, RenderTree, AsciiStyle, PreOrderIter, LevelOrderIter
+
+
+>>>>>>> e2a36b2ceac6c7d03b71985e40a635bf0e9c87d5
 # Function to export the dataframe results into an excel sheet
 def export_to_excel_from_tree(high_bond_tree, org_id, region_code):
 
@@ -159,11 +170,17 @@ def export_to_excel_from_tree(high_bond_tree, org_id, region_code):
     #use excelwriter to write into excel
     writer = pd.ExcelWriter(excel_file, engine='xlsxwriter')
 
+<<<<<<< HEAD
+=======
+   
+
+>>>>>>> e2a36b2ceac6c7d03b71985e40a635bf0e9c87d5
     for node in PreOrderIter(high_bond_tree):
 
         #check the depth of the node if it is greater than 0 to confirm  it has nested structure
         if(node.depth > 0):
 
+<<<<<<< HEAD
           #if node is nested
             if node.node_type=='nested':
 
@@ -203,3 +220,17 @@ def export_to_excel_from_tree(high_bond_tree, org_id, region_code):
     
     #Leave this print message to the use to ge to know that script has completed one org
     print("Saved the resources from org id ", str(int(org_id)))
+=======
+          # if(node.api_response.empty==False):
+          if(node.api_response is not  None and isinstance(node.api_response, pd.DataFrame)):
+            node.api_response.to_excel(writer, sheet_name=node.name, index=False)
+            logging.info(node.api_response)
+
+            
+            
+
+    writer.save()
+    
+    logging.info("Saving the resources aPI reponses into a destination location " + str(int(org_id)) )
+    print("Saved the resources from org id ", str(int(org_id)))
+>>>>>>> e2a36b2ceac6c7d03b71985e40a635bf0e9c87d5
