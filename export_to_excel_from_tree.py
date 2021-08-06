@@ -1,51 +1,63 @@
 from pandas.core.frame import DataFrame
+
 import windstream_logger
+
 logging= windstream_logger.get_logger("write_into_excel")
 
-import os
 import itertools
-import pandas as pd
 import json
-import requests
+import os
 from collections import defaultdict
-from anytree import Node, RenderTree, AsciiStyle, PreOrderIter, LevelOrderIter
 
+import pandas as pd
+import requests
+from anytree import AsciiStyle, LevelOrderIter, Node, PreOrderIter, RenderTree
 
-# Function to parse the attribute_types json response from an api end point call
-def json_parse_attribute_types(json_data):
+#Function to parse the attribute_types json response from an api end point call
+# def json_parse_attribute_types(json_data):
+   
+#   """
+#     Function traverse the json reponse and pick each of the resources and its nested list of structures and converts the response into dataframe
+#     :param json_data: dict
+#     :return: a data frame
+#   """
 
-  #Intialize the empty dataframe
-  df_result = pd.DataFrame()
-  #log the json data as it is 
-  logging.info("json_data is :"+ json.dumps(json_data, indent = 4))
+#   #Intialize the empty dataframe
+#   df_result = pd.DataFrame()
+#   #log the json data as it is 
+#   logging.info("json_data is :"+ json.dumps(json_data, indent = 4))
   
-  # check for the "type options"
-  if "type_options" in json_data['data']['attributes']:
+#   # check for the "type options"
+#   if "type_options" in json_data['data']['attributes']:
           
             
-            if "select_values" in json_data['data']['attributes']["type_options"]:
+#             if "select_values" in json_data['data']['attributes']["type_options"]:
               
-              for select_value in json_data['data']['attributes']["type_options"]["select_values"]:
+#               for select_value in json_data['data']['attributes']["type_options"]["select_values"]:
            
-                logging.info("select_value is :"+ str(select_value))
+#                 logging.info("select_value is :"+ str(select_value))
 
-                temp_df = pd.json_normalize(select_value)
+#                 temp_df = pd.json_normalize(select_value)
                 
-                temp_df.insert(0,"attribute_id",json_data['data']["id"])
+#                 temp_df.insert(0,"attribute_id",json_data['data']["id"])
 
-                temp_df.insert(1, "type",json_data['data']["type"])
+#                 temp_df.insert(1, "type",json_data['data']["type"])
 
-                df_result=pd.concat([df_result,temp_df])
+#                 df_result=pd.concat([df_result,temp_df])
            
 
 
-  #logging.info(df_result)
-  return df_result
+#   #logging.info(df_result)
+#   return df_result
 
 
-# Function to parse the attribute_types json response from an api end point call
+# # Function to parse the attribute_types json response from an api end point call
 def json_parse_attribute_types1(json_data):
-
+  """
+    Function traverse the json reponse and pick each of the resources and its nested list of structures and converts the response into dataframe
+    :param json_data: dict
+    :return: a data frame
+  """
   #Intialize the empty dataframe
   df_result = pd.DataFrame()
   #log the json data as it is 
@@ -54,17 +66,16 @@ def json_parse_attribute_types1(json_data):
   # check for the "type options"
   if "type_options" in json_data['data']['attributes']:
           
-            
-            if "select_values" in json_data['data']['attributes']["type_options"]:
+    if "select_values" in json_data['data']['attributes'].get('type_options', {}).get('selected_values', []):
               
-              for select_value in json_data['data']['attributes']["type_options"]["select_values"]:
+      for select_value in json_data['data']['attributes']["type_options"]["select_values"]:
            
                 logging.info("select_value is :"+ str(select_value))
-
+                #extract the select values list items and normalize it as rows
                 temp_df = pd.json_normalize(select_value)
-                
+                #insert the attribute id as a first column in the temp_df to make the connection between which attrobute id this select values columns are flattened
                 temp_df.insert(0,"attribute_id",json_data['data']["id"])
-
+                 #insert the attribute type as a first column in the temp_df to make the connection between which attrobute id this select values columns are flattened
                 temp_df.insert(1, "type",json_data['data']["type"])
 
                 df_result=pd.concat([df_result,temp_df])
@@ -75,29 +86,29 @@ def json_parse_attribute_types1(json_data):
   return df_result
 
 # Function to parse the node if the node has the nested structures- but not as a child json response from an api end point call
-def  custom_dataframe_nested(api_json_list,col_name):
+# def  custom_dataframe_nested(api_json_list,col_name):
 
-    handler=pd.DataFrame()
-    #intialize the dataframe
-    nested_structures=pd.DataFrame()
+#     handler=pd.DataFrame()
+#     #intialize the dataframe
+#     nested_structures=pd.DataFrame()
     
-    for api_json in api_json_list:
+#     for api_json in api_json_list:
             
-            #run a for loop for every items
-            for i,values in api_json.items():
-                #check for the type options column
-                if col_name=='type_options' or col_name == " ":
-                    temp_df= json_parse_attribute_types(api_json)
-                    nested_structures=pd.concat([nested_structures,temp_df])
-                elif col_name in api_json:
-                    temp_df=pd.json_normalize(values['attributes'][col_name])
-                    temp_df.insert(0,"id",api_json['data']["id"])
-                    temp_df.insert(1, "type",api_json['data']["type"])
-                    nested_structures=pd.concat([nested_structures,temp_df])
+#             #run a for loop for every items
+#             for i,values in api_json.items():
+#                 #check for the type options column
+#                 if col_name=='type_options' or col_name == " ":
+#                     temp_df= json_parse_attribute_types(api_json)
+#                     nested_structures=pd.concat([nested_structures,temp_df])
+#                 elif col_name in api_json:
+#                     temp_df=pd.json_normalize(values['attributes'][col_name])
+#                     temp_df.insert(0,"id",api_json['data']["id"])
+#                     temp_df.insert(1, "type",api_json['data']["type"])
+#                     nested_structures=pd.concat([nested_structures,temp_df])
                    
                     
-    #return the nested structures json response as a data frame
-    return nested_structures
+#     #return the nested structures json response as a data frame
+#     return nested_structures
 
 
 def  custom_dataframe_nested1(api_json_list,col_name):

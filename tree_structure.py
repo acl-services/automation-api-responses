@@ -1,6 +1,6 @@
 # importing all the libraries and packages
 
-from anytree import Node, RenderTree, AsciiStyle, PreOrderIter, LevelOrderIter
+from anytree import AsciiStyle, LevelOrderIter, Node, PreOrderIter, RenderTree
 from pandas import pandas as pd
 
 
@@ -17,30 +17,30 @@ def build_tree_for_org(org_id):
     )
 
     # Declare the collections as the child of HBR
-    # collections = Node("collections", parent=high_bond_root,url="/collections",api_response=pd.DataFrame,node_type='normal')
-    # questionnaires = Node("questionnaires", parent=collections,url="/questionnaires",api_response=pd.DataFrame,node_type='normal')
-    # analyses = Node("analyses", parent=collections,url="/analyses",api_response=pd.DataFrame,node_type='normal')
-    # table = Node("table", parent=analyses,url="/tables",api_response=pd.DataFrame,node_type='normal')
+    collections = Node("collections", parent=high_bond_root,url="/collections",api_response=pd.DataFrame,node_type='normal')
+    questionnaires = Node("questionnaires", parent=collections,url="/questionnaires",api_response=pd.DataFrame,node_type='normal')
+    analyses = Node("analyses", parent=collections,url="/analyses",api_response=pd.DataFrame,node_type='normal')
+    table = Node("table", parent=analyses,url="/tables",api_response=pd.DataFrame,node_type='normal')
 
     # Robots are the main resource under HB
-    # robots=Node("robots", parent=high_bond_root,url="/robots",api_response=pd.DataFrame,node_type='normal')
-    # robot_tasks=Node("robot_tasks", parent=robots,url="/robot_tasks",api_response=pd.DataFrame,node_type='normal')
+    robots=Node("robots", parent=high_bond_root,url="/robots",api_response=pd.DataFrame,node_type='normal')
+    robot_tasks=Node("robot_tasks", parent=robots,url="/robot_tasks",api_response=pd.DataFrame,node_type='normal')
 
     # why the api says list a robot's analytic scripts
-    # robot_versions=Node("robot_versions", parent=robots,url="/robot_apps",api_response=pd.DataFrame,node_type='normal')
+    robot_versions=Node("robot_versions", parent=robots,url="/robot_apps",api_response=pd.DataFrame,node_type='normal')
 
     # system_users
-    # System_users=Node("system_users", parent=high_bond_root,url="/system_users",api_response=pd.DataFrame,node_type='normal')
+    System_users=Node("system_users", parent=high_bond_root,url="/system_users",api_response=pd.DataFrame,node_type='normal')
 
     # Asset type is the main resource
-    # asset_types = Node("asset_types",parent=high_bond_root,url="/asset_types",api_response=pd.DataFrame,node_type='normal')
-    # assets = Node("asset_types_assets", parent=asset_types,url="/assets",api_response=pd.DataFrame,node_type='normal')
+    asset_types = Node("asset_types",parent=high_bond_root,url="/asset_types",api_response=pd.DataFrame,node_type='normal')
+    assets = Node("asset_types_assets", parent=asset_types,url="/assets",api_response=pd.DataFrame,node_type='normal')
     # # #asset_type_attribute type
     # # #{{ _.base_url }}{{ _.org_id }}/asset_types/1027157/attribute_types
     # asset_type_attribute_types=Node("asset_type_attribute_types",parent=asset_types, url="/attribute_types", api_response=pd.DataFrame,node_type='normal')
 
     # events is the main resource at HB
-    # events = Node("events",parent=high_bond_root,url="/events",api_response=pd.DataFrame,node_type='normal')
+    events = Node("events",parent=high_bond_root,url="/events",api_response=pd.DataFrame,node_type='normal')
 
     # attribute_types is the main resource at HB
 
@@ -62,7 +62,7 @@ def build_tree_for_org(org_id):
     )
 
     # Roles is the main resource at HB
-    # roles = Node("roles",parent=high_bond_root,url="/roles",api_response=pd.DataFrame,node_type='normal')
+    roles = Node("roles",parent=high_bond_root,url="/roles",api_response=pd.DataFrame,node_type='normal')
 
     # #handlers is the main resource at HB
     handlers = Node(
@@ -116,16 +116,16 @@ def build_tree_for_org(org_id):
     )
 
     # custom_attributes is the child resource of project
-    # custom_attributes= Node("custom_attributes", parent=project_type, url='/custom_attributes',api_response=pd.DataFrame,node_type='normal')
+    custom_attributes= Node("custom_attributes", parent=project_type, url='/custom_attributes',api_response=pd.DataFrame,node_type='normal')
 
     # # #workflows is the child resource of HB
-    # workflows= Node("workflows",parent=high_bond_root,url="/workflows",api_response=pd.DataFrame,node_type='normal')
+    workflows= Node("workflows",parent=high_bond_root,url="/workflows",api_response=pd.DataFrame,node_type='normal')
 
     # # #workflow_status is the child resource of workflow
-    # workflow_status= Node("workflow_status", parent=workflows,url="?include=statuses",api_response=pd.DataFrame,node_type='normal')
+    workflow_status= Node("workflow_status", parent=workflows,url="?include=statuses",api_response=pd.DataFrame,node_type='normal')
 
     # # #workflow_status_events is the child resource of workflow
-    # workflow_status_events= Node("workflow_status_events", parent=workflows,url="?include=statuses.events",api_response=pd.DataFrame,node_type='normal')
+    workflow_status_events= Node("workflow_status_events", parent=workflows,url="?include=statuses.events",api_response=pd.DataFrame,node_type='normal')
 
     return high_bond_root
 

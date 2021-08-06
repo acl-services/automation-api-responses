@@ -1,25 +1,25 @@
 # import all the necessary packages
 
 # system defined module
-from anytree import Node, RenderTree, AsciiStyle, PreOrderIter, LevelOrderIter
-from pathlib import Path
 import warnings
+from pathlib import Path
+
+from anytree import AsciiStyle, LevelOrderIter, Node, PreOrderIter, RenderTree
 
 warnings.filterwarnings("ignore")
 import json
-import requests
-from genericpath import exists, isfile
-from pandas import json_normalize
-import pandas as pd
 import logging
 import os
 
+import pandas as pd
+import requests
+from genericpath import exists, isfile
+from pandas import json_normalize
 
-# user-defined module
-import tree_structure
 import access_credentials
-import extract_resources_from_api_tree
 import export_to_excel_from_tree
+import extract_resources_from_api_tree
+import tree_structure
 import windstream_logger
 
 logging = windstream_logger.get_logger("windstream_main")
@@ -38,6 +38,7 @@ def windstream_main():
         # log and exit the program smoothly
         exit()
 
+
     # function call for api access credentials
     else:
 
@@ -54,7 +55,7 @@ def windstream_main():
                 if row.base_url != "nan":
 
                     # log the base url for the purpose of debugging
-                    logging.info("the base url is : " + str(row.base_url))
+                    logging.info(f"the base url is :  + {str(row.base_url)}")
 
                     # function call for extract_resources_from_url
                     high_bond_root = tree_structure.build_tree_for_org(row.org_id)
