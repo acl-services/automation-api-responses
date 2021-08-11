@@ -194,12 +194,14 @@ def export_to_excel_from_tree(high_bond_tree, org_id, region_code):
                   df.to_excel(writer, sheet_name= col_name , index=False)
             
             # # check if the node type is not nested and normal          
+
             if node.node_type=='normal':
+
                 if(node.api_response is not None and isinstance(node.api_response, pd.DataFrame) or node.api_response is None ):
                     node.api_response.to_excel(writer, sheet_name=node.name, index=False)
                     logging.info(node.api_response)
 
-            
+
 
             
             
