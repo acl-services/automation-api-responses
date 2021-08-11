@@ -26,7 +26,7 @@ def access_credentials():
         
         logging.info("yes the file is the specified path")
     
-        input_df = pd.read_excel(checkFile, sheet_name="input_config", index_col=None)
+        input_df = pd.read_excel(checkFile, sheet_name="input_config_2", index_col=None)
 
         for index, row in input_df.iterrows():
 

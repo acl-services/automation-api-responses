@@ -13,60 +13,23 @@ import pandas as pd
 import requests
 from anytree import AsciiStyle, LevelOrderIter, Node, PreOrderIter, RenderTree
 
-#Function to parse the attribute_types json response from an api end point call
-# def json_parse_attribute_types(json_data):
-   
-#   """
-#     Function traverse the json reponse and pick each of the resources and its nested list of structures and converts the response into dataframe
-#     :param json_data: dict
-#     :return: a data frame
-#   """
-
-#   #Intialize the empty dataframe
-#   df_result = pd.DataFrame()
-#   #log the json data as it is 
-#   logging.info("json_data is :"+ json.dumps(json_data, indent = 4))
-  
-#   # check for the "type options"
-#   if "type_options" in json_data['data']['attributes']:
-          
-            
-#             if "select_values" in json_data['data']['attributes']["type_options"]:
-              
-#               for select_value in json_data['data']['attributes']["type_options"]["select_values"]:
-           
-#                 logging.info("select_value is :"+ str(select_value))
-
-#                 temp_df = pd.json_normalize(select_value)
-                
-#                 temp_df.insert(0,"attribute_id",json_data['data']["id"])
-
-#                 temp_df.insert(1, "type",json_data['data']["type"])
-
-#                 df_result=pd.concat([df_result,temp_df])
-           
-
-
-#   #logging.info(df_result)
-#   return df_result
-
-
-# # Function to parse the attribute_types json response from an api end point call
+# Function to parse the attribute_types json response from an api end point call
 def json_parse_attribute_types1(json_data):
   """
     Function traverse the json reponse and pick each of the resources and its nested list of structures and converts the response into dataframe
     :param json_data: dict
-    :return: a data frame
+    :return: a dataframe
   """
   #Intialize the empty dataframe
   df_result = pd.DataFrame()
+  
   #log the json data as it is 
   logging.info("json_data is :"+ json.dumps(json_data, indent = 4))
   
-  # check for the "type options"
+  #check for the "type options"
   if "type_options" in json_data['data']['attributes']:
           
-    if "select_values" in json_data['data']['attributes'].get('type_options', {}).get('selected_values', []):
+    if "select_values" in json_data['data']['attributes']["type_options"]:
               
       for select_value in json_data['data']['attributes']["type_options"]["select_values"]:
            
@@ -79,38 +42,9 @@ def json_parse_attribute_types1(json_data):
                 temp_df.insert(1, "type",json_data['data']["type"])
 
                 df_result=pd.concat([df_result,temp_df])
-           
-
-
-  #logging.info(df_result)
+  #  returns a dataframe     
   return df_result
-
-# Function to parse the node if the node has the nested structures- but not as a child json response from an api end point call
-# def  custom_dataframe_nested(api_json_list,col_name):
-
-#     handler=pd.DataFrame()
-#     #intialize the dataframe
-#     nested_structures=pd.DataFrame()
-    
-#     for api_json in api_json_list:
-            
-#             #run a for loop for every items
-#             for i,values in api_json.items():
-#                 #check for the type options column
-#                 if col_name=='type_options' or col_name == " ":
-#                     temp_df= json_parse_attribute_types(api_json)
-#                     nested_structures=pd.concat([nested_structures,temp_df])
-#                 elif col_name in api_json:
-#                     temp_df=pd.json_normalize(values['attributes'][col_name])
-#                     temp_df.insert(0,"id",api_json['data']["id"])
-#                     temp_df.insert(1, "type",api_json['data']["type"])
-#                     nested_structures=pd.concat([nested_structures,temp_df])
-                   
-                    
-#     #return the nested structures json response as a data frame
-#     return nested_structures
-
-
+# Function to export the results into an excel sheet based on nested structure or normal structures
 def  custom_dataframe_nested1(api_json_list,col_name):
 
     handler=pd.DataFrame()
@@ -193,18 +127,13 @@ def export_to_excel_from_tree(high_bond_tree, org_id, region_code):
                   #write into an excel sheet with the name of the column
                   df.to_excel(writer, sheet_name= col_name , index=False)
             
-            # # check if the node type is not nested and normal          
-
+            #check if the node type is not nested and normal          
             if node.node_type=='normal':
 
                 if(node.api_response is not None and isinstance(node.api_response, pd.DataFrame) or node.api_response is None ):
                     node.api_response.to_excel(writer, sheet_name=node.name, index=False)
                     logging.info(node.api_response)
-
-
-
-            
-            
+        
     #save
     writer.save()
     
