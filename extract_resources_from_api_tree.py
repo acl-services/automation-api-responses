@@ -1,13 +1,16 @@
 from logging import log
+
 import windstream_logger
 
 logging = windstream_logger.get_logger("api_tree_process")
 
 
 import os
+
 import pandas as pd
 import requests
-from anytree import Node, RenderTree, AsciiStyle, PreOrderIter, LevelOrderIter
+from anytree import AsciiStyle, LevelOrderIter, Node, PreOrderIter, RenderTree
+
 
 # Function to extract the resources from anytree
 def extract_resources_from_api_tree(hb_root, url_returned, token):
