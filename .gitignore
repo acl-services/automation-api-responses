@@ -108,6 +108,3 @@ GitHub.sublime-settings
 
 #log files
 .log*
-
-#Excel files
-input_file.xlsx
